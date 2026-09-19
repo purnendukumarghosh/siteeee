@@ -1,82 +1,148 @@
-// Mobile navigation toggle
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.nav-links');
+const input = document.getElementById('cmd-input');
+const output = document.getElementById('output');
+const terminalBody = document.getElementById('terminal-body');
 
-hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('active');
+// Keep focus on input when clicking inside the terminal
+terminalBody.addEventListener('click', () => {
+    input.focus();
 });
 
-// Close mobile menu when a link is clicked
-document.querySelectorAll('.nav-links a').forEach(link => {
-    link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
+// Icon click logic - triggers commands automatically
+const icons = document.querySelectorAll('.icon');
+icons.forEach(icon => {
+    icon.addEventListener('click', () => {
+        const cmd = icon.getAttribute('data-cmd');
+        executeCommand(cmd);
     });
 });
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            window.scrollTo({
-                top: target.offsetTop - 70, // Adjust for fixed header
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// Active navigation link highlighting on scroll
-const sections = document.querySelectorAll('section');
-const navItems = document.querySelectorAll('.nav-links a');
-
-window.addEventListener('scroll', () => {
-    let current = '';
+// File System Data Simulation
+const fileSystem = {
+    'about.txt': `Hello! I'm a Tech Graduate Student.
+I build things for the web and solve complex problems with code.
+I am passionate about software engineering, Web Dev, and AI.`,
     
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        
-        if (pageYOffset >= (sectionTop - 100)) {
-            current = section.getAttribute('id');
-        }
-    });
+    'skills.json': `{
+  "languages": ["HTML", "CSS", "JavaScript", "Python", "Java"],
+  "frameworks": ["React", "Node.js", "Express", "Tailwind"],
+  "tools": ["Git", "Docker", "AWS", "Linux"]
+}`,
     
-    navItems.forEach(item => {
-        item.classList.remove('active');
-        if (item.getAttribute('href').includes(current)) {
-            item.classList.add('active');
+    'contact.txt': `You can reach me at:
+Email:    student@example.com
+GitHub:   github.com/tech-student
+LinkedIn: linkedin.com/in/tech-student`
+};
+
+const projectsData = `
+=========================================
+          FEATURED PROJECTS
+=========================================
+
+1. E-Commerce Web App
+   Tech: React, Node.js, MongoDB
+   Info: A full-stack app with Stripe payment integration.
+
+2. Machine Learning Predictor
+   Tech: Python, Scikit-Learn
+   Info: Predicts housing prices with 85% accuracy.
+
+3. Terminal Portfolio OS
+   Tech: HTML, CSS, JS
+   Info: You are looking at it right now!
+=========================================
+`;
+
+// Available Commands
+const commands = {
+    'help': `Available commands:
+  <span class="color-yellow">help</span>       - Show this message
+  <span class="color-yellow">ls</span>         - List directory contents
+  <span class="color-yellow">cat &lt;file&gt;</span> - View file contents
+  <span class="color-yellow">clear</span>      - Clear terminal screen
+  <span class="color-yellow">whoami</span>     - Print current user
+  <span class="color-yellow">date</span>       - Show current date`,
+    
+    'ls': `<span class="color-blue">about.txt</span>    <span class="color-blue">skills.json</span>    <span class="color-blue">contact.txt</span>    <span class="color-yellow">view_projects.sh</span>`,
+    
+    'clear': () => {
+        output.innerHTML = '';
+    },
+    
+    'whoami': 'guest',
+    
+    'date': () => new Date().toString(),
+    
+    './view_projects.sh': projectsData
+};
+
+input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        const cmdText = this.value.trim();
+        if (cmdText) {
+            executeCommand(cmdText, true);
+        } else {
+            // just print prompt on empty enter
+            const promptLine = document.createElement('div');
+            promptLine.innerHTML = `<span class="prompt">guest@portfolio:~$</span>`;
+            output.appendChild(promptLine);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
         }
-    });
+        this.value = '';
+    }
 });
 
-// Form submission handler
-const contactForm = document.getElementById('contact-form');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Simple form validation & simulation
-        const name = document.getElementById('name').value;
-        const email = document.getElementById('email').value;
-        const message = document.getElementById('message').value;
-        
-        if(name && email && message) {
-            const btn = contactForm.querySelector('button');
-            const originalText = btn.innerText;
-            
-            btn.innerText = 'Sending...';
-            btn.disabled = true;
-            
-            // Simulate API call
-            setTimeout(() => {
-                alert('Thank you for your message! This is a demo so no actual email was sent.');
-                contactForm.reset();
-                btn.innerText = originalText;
-                btn.disabled = false;
-            }, 1500);
+function executeCommand(cmdText) {
+    // Print the prompt and the command the user executed
+    const promptLine = document.createElement('div');
+    promptLine.innerHTML = `<span class="prompt">guest@portfolio:~$</span> <span class="color-white">${cmdText}</span>`;
+    output.appendChild(promptLine);
+
+    const args = cmdText.split(' ').filter(Boolean);
+    const cmd = args[0].toLowerCase();
+    
+    let responseText = '';
+
+    if (cmd === 'clear') {
+        commands['clear']();
+        return; // Clear removes all output, no need to append
+    }
+
+    if (cmd === 'cat') {
+        if (args.length > 1) {
+            const fileName = args[1];
+            if (fileSystem[fileName]) {
+                responseText = fileSystem[fileName];
+            } else {
+                responseText = `cat: ${fileName}: No such file or directory`;
+            }
+        } else {
+            responseText = `cat: missing operand`;
         }
-    });
+    } else if (commands[cmd]) {
+        if (typeof commands[cmd] === 'function') {
+            responseText = commands[cmd]();
+        } else {
+            responseText = commands[cmd];
+        }
+    } else if (cmd === './view_projects.sh' || cmd === 'sh' && args[1] === 'view_projects.sh' || cmd === 'bash' && args[1] === 'view_projects.sh') {
+        responseText = commands['./view_projects.sh'];
+    } else {
+        responseText = `bash: ${cmd}: command not found`;
+    }
+
+    if (responseText) {
+        const responseLine = document.createElement('div');
+        responseLine.innerHTML = responseText;
+        output.appendChild(responseLine);
+    }
+
+    // Scroll to the bottom to simulate a real terminal
+    terminalBody.scrollTop = terminalBody.scrollHeight;
+    
+    // Always keep focus on input
+    input.focus();
 }
+
+// Ensure input is focused when page loads
+window.onload = () => input.focus();
