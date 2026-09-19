@@ -2,51 +2,69 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Terminal Portfolio</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <!-- Scanline overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Matrix rain canvas -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- Desktop icons -->
     <div class="desktop" id="desktop">
-        <!-- Icons -->
-        <div class="icon" data-cmd="cat about.txt">
+        <div class="icon" data-cmd="cat about.txt" title="cat about.txt">
             <i class="fas fa-file-alt"></i>
             <span>about.txt</span>
         </div>
-        <div class="icon" data-cmd="./view_projects.sh">
+        <div class="icon" data-cmd="open projects" title="open projects">
             <i class="fas fa-folder"></i>
-            <span>projects</span>
+            <span>projects/</span>
         </div>
-        <div class="icon" data-cmd="cat skills.json">
+        <div class="icon" data-cmd="cat skills.json" title="cat skills.json">
             <i class="fas fa-file-code"></i>
             <span>skills.json</span>
         </div>
-        <div class="icon" data-cmd="cat contact.txt">
+        <div class="icon" data-cmd="cat contact.txt" title="cat contact.txt">
             <i class="fas fa-address-book"></i>
             <span>contact.txt</span>
         </div>
+        <div class="icon" data-cmd="cat resume.md" title="cat resume.md">
+            <i class="fas fa-id-badge"></i>
+            <span>resume.md</span>
+        </div>
+        <div class="icon" data-cmd="neofetch" title="neofetch">
+            <i class="fas fa-terminal"></i>
+            <span>neofetch</span>
+        </div>
     </div>
 
+    <!-- Terminal window -->
     <div class="terminal-container" id="terminal-container">
         <div class="terminal-header">
             <div class="term-buttons">
-                <span class="term-btn close"></span>
-                <span class="term-btn minimize"></span>
-                <span class="term-btn maximize"></span>
+                <span class="term-btn close" title="Close"></span>
+                <span class="term-btn minimize" title="Minimize"></span>
+                <span class="term-btn maximize" title="Maximize"></span>
             </div>
-            <div class="term-title">guest@portfolio: ~</div>
+            <div class="term-title" id="term-title">guest@portfolio: ~/home</div>
         </div>
         <div class="terminal-body" id="terminal-body">
-            <div class="output" id="output">
-                <div>Welcome to my portfolio OS.</div>
-                <div>Type 'help' to see available commands, or click on an icon to execute it.</div>
-            </div>
+            <div class="output" id="output"></div>
             <div class="input-line">
-                <span class="prompt">guest@portfolio:~$</span>
+                <span class="prompt" id="prompt">guest@portfolio:~$</span>
                 <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus>
+                <span class="cursor-blink"></span>
             </div>
         </div>
+    </div>
+
+    <div class="taskbar">
+        <span class="taskbar-left"><i class="fas fa-terminal"></i> PortfolioOS v3.7</span>
+        <span class="taskbar-right" id="clock"></span>
     </div>
 
     <script src="script.js"></script>

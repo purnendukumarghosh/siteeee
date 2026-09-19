@@ -1,143 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body {
-    background-color: #1b2b34;
-    background-image: linear-gradient(to right, #1a232c, #2b3846);
-    height: 100vh;
-    overflow: hidden;
-    font-family: 'Courier New', Courier, monospace;
-    display: flex;
-    flex-direction: column;
+:root {
+    --green: #00ff41;
+    --green-dim: #00cc33;
+    --green-dark: #009926;
+    --green-glow: rgba(0, 255, 65, 0.35);
+    --bg: #0a0a0a;
+    --bg-light: #111;
+    --panel-bg: rgba(5, 10, 5, 0.92);
+    --border: #0f3d0f;
+    --red: #ff3333;
+    --yellow: #f0e130;
+    --cyan: #00ffcc;
+    --white: #d0ffd0;
 }
 
-/* Desktop */
-.desktop {
-    flex: 1;
-    padding: 30px;
+html {
+    font-size: 16px;
+}
+
+body {
+    background: var(--bg);
+    height: 100dvh;
+    overflow: hidden;
+    font-family: 'Fira Code', 'Courier New', monospace;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 30px;
-    flex-wrap: wrap;
-    align-content: flex-start;
+    position: relative;
+}
+
+/* Matrix Rain Canvas */
+#matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.12;
+}
+
+/* CRT Scanlines */
+.scanlines {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15) 0px,
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+}
+
+/* ===== DESKTOP ICONS ===== */
+.desktop {
+    flex: 1;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    grid-auto-rows: 110px;
+    gap: 10px;
+    align-content: start;
+    z-index: 2;
+    position: relative;
 }
 
 .icon {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90px;
+    justify-content: center;
     cursor: pointer;
-    color: white;
+    color: var(--green);
     text-align: center;
-    transition: transform 0.1s;
-    padding: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .icon:hover {
-    background-color: rgba(255, 255, 255, 0.15);
-    border-radius: 8px;
+    background-color: rgba(0, 255, 65, 0.08);
+    box-shadow: 0 0 10px var(--green-glow);
 }
 
 .icon:active {
-    transform: scale(0.95);
+    transform: scale(0.92);
+    background-color: rgba(0, 255, 65, 0.15);
 }
 
 .icon i {
-    font-size: 45px;
-    margin-bottom: 8px;
-    color: #66d9ef; /* File blue */
-    text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+    font-size: 40px;
+    margin-bottom: 6px;
+    filter: drop-shadow(0 0 4px var(--green-glow));
 }
 
-.icon i.fa-folder {
-    color: #fd971f; /* Folder orange */
+.icon .fa-folder {
+    color: var(--yellow);
+    filter: drop-shadow(0 0 4px rgba(240, 225, 48, 0.4));
 }
 
 .icon span {
-    font-size: 14px;
-    font-family: sans-serif;
-    text-shadow: 1px 1px 2px black;
+    font-size: 12px;
     word-break: break-word;
+    text-shadow: 0 0 5px var(--green-glow);
 }
 
-/* Terminal Window */
+/* ===== TERMINAL WINDOW ===== */
 .terminal-container {
-    width: 85%;
-    max-width: 900px;
-    height: 60%;
-    background-color: rgba(20, 20, 20, 0.95);
-    border-radius: 10px 10px 0 0;
-    border: 1px solid #444;
-    border-bottom: none;
-    box-shadow: 0 -5px 25px rgba(0,0,0,0.8);
-    position: absolute;
-    bottom: 0;
+    position: fixed;
+    bottom: 36px; /* above taskbar */
     left: 50%;
     transform: translateX(-50%);
+    width: 94%;
+    max-width: 900px;
+    height: 55%;
+    min-height: 250px;
+    background: var(--panel-bg);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 10px 10px 0 0;
+    box-shadow: 0 0 30px rgba(0, 255, 65, 0.1), inset 0 0 60px rgba(0,0,0,0.5);
     display: flex;
     flex-direction: column;
+    z-index: 10;
 }
 
 .terminal-header {
-    background-color: #333;
-    padding: 12px 15px;
+    background: linear-gradient(180deg, #1a1a1a, #111);
+    padding: 10px 14px;
     border-radius: 10px 10px 0 0;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #111;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
 }
 
 .term-buttons {
     display: flex;
-    gap: 8px;
+    gap: 7px;
 }
 
 .term-btn {
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
     border-radius: 50%;
 }
 
-.term-btn.close { background-color: #ff5f56; }
-.term-btn.minimize { background-color: #ffbd2e; }
-.term-btn.maximize { background-color: #27c93f; }
+.term-btn.close { background: #ff5f56; }
+.term-btn.minimize { background: #ffbd2e; }
+.term-btn.maximize { background: #27c93f; }
 
 .term-title {
-    color: #bbb;
-    font-size: 14px;
-    margin-left: 20px;
-    font-family: sans-serif;
-    font-weight: bold;
+    color: #5a5a5a;
+    font-size: 13px;
+    margin-left: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 .terminal-body {
-    padding: 20px;
+    padding: 16px;
     flex: 1;
     overflow-y: auto;
-    color: #a6e22e; /* Terminal green */
-    font-size: 16px;
-    line-height: 1.5;
+    color: var(--green);
+    font-size: 14px;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
 }
 
-.terminal-body::-webkit-scrollbar {
-    width: 10px;
-}
-.terminal-body::-webkit-scrollbar-thumb {
-    background: #555; 
-    border-radius: 5px;
-}
+.terminal-body::-webkit-scrollbar { width: 8px; }
+.terminal-body::-webkit-scrollbar-track { background: transparent; }
+.terminal-body::-webkit-scrollbar-thumb { background: var(--green-dark); border-radius: 4px; }
 
 .output {
-    margin-bottom: 10px;
+    flex: 1;
 }
 
 .output div {
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     word-break: break-word;
     white-space: pre-wrap;
 }
@@ -145,27 +200,134 @@ body {
 .input-line {
     display: flex;
     align-items: center;
+    flex-shrink: 0;
+    margin-top: 4px;
 }
 
 .prompt {
-    color: #f92672; /* Pink prompt */
-    margin-right: 10px;
+    color: var(--red);
+    margin-right: 8px;
     white-space: nowrap;
-    font-weight: bold;
+    font-weight: 700;
+    text-shadow: 0 0 6px rgba(255, 50, 50, 0.4);
+    font-size: 14px;
 }
 
 #cmd-input {
     background: transparent;
     border: none;
-    color: #f8f8f2;
+    color: var(--green);
     font-family: inherit;
-    font-size: inherit;
+    font-size: 14px;
     flex: 1;
     outline: none;
+    caret-color: var(--green);
 }
 
-/* Colors for terminal output */
-.color-blue { color: #66d9ef; font-weight: bold; }
-.color-yellow { color: #e6db74; font-weight: bold; }
-.color-pink { color: #f92672; }
-.color-white { color: #f8f8f2; }
+.cursor-blink {
+    display: inline-block;
+    width: 9px;
+    height: 18px;
+    background-color: var(--green);
+    animation: blink 1s step-end infinite;
+    margin-left: 2px;
+    flex-shrink: 0;
+    vertical-align: middle;
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
+
+/* ===== TASKBAR ===== */
+.taskbar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 36px;
+    background: linear-gradient(180deg, #111, #0a0a0a);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    color: var(--green-dim);
+    font-size: 12px;
+    z-index: 20;
+    font-family: 'Fira Code', monospace;
+}
+
+.taskbar-left i {
+    margin-right: 6px;
+}
+
+/* ===== TERMINAL OUTPUT COLORS ===== */
+.c-green  { color: var(--green); }
+.c-dim    { color: var(--green-dim); }
+.c-cyan   { color: var(--cyan); }
+.c-yellow { color: var(--yellow); }
+.c-red    { color: var(--red); }
+.c-white  { color: var(--white); }
+.c-bold   { font-weight: 700; }
+
+.ascii-art {
+    color: var(--green);
+    line-height: 1.2;
+    font-size: 11px;
+}
+
+/* Tree view */
+.tree-line { color: var(--green-dim); }
+
+/* ===== RESPONSIVE ===== */
+
+/* Tablets */
+@media screen and (max-width: 768px) {
+    .desktop {
+        grid-template-columns: repeat(auto-fill, 85px);
+        grid-auto-rows: 100px;
+        padding: 15px;
+        gap: 8px;
+    }
+    .icon i { font-size: 34px; }
+    .icon span { font-size: 11px; }
+
+    .terminal-container {
+        width: 98%;
+        height: 50%;
+        min-height: 220px;
+    }
+    .terminal-body { font-size: 13px; padding: 12px; }
+    .prompt { font-size: 12px; }
+    #cmd-input { font-size: 13px; }
+}
+
+/* Phones */
+@media screen and (max-width: 480px) {
+    .desktop {
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 90px;
+        padding: 12px;
+        gap: 6px;
+    }
+    .icon i { font-size: 28px; }
+    .icon span { font-size: 10px; }
+
+    .terminal-container {
+        width: 100%;
+        height: 55%;
+        border-radius: 8px 8px 0 0;
+        border-left: none;
+        border-right: none;
+    }
+    .terminal-header { padding: 8px 12px; }
+    .term-title { font-size: 11px; }
+    .terminal-body { font-size: 12px; padding: 10px; }
+    .prompt { font-size: 11px; margin-right: 5px; }
+    #cmd-input { font-size: 12px; }
+    .cursor-blink { width: 7px; height: 14px; }
+    .ascii-art { font-size: 7px; }
+    .taskbar { font-size: 10px; height: 30px; }
+    .terminal-container { bottom: 30px; }
+}
