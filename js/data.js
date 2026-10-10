@@ -73,7 +73,7 @@ window.PROFILE = {
         {
             codename: 'PKG//OS',
             title: 'This Portfolio',
-            desc: 'Hand-built interactive portfolio: WebGL scenes, a working shell and an Enigma machine — no frameworks.',
+            desc: 'Hand-built interactive portfolio: WebGL scenes, a working shell and a 3D Myth Lab — no frameworks.',
             tags: ['Three.js', 'WebGL', 'Vanilla JS']
         }
     ],
