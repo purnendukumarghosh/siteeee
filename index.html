@@ -2,71 +2,286 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Terminal Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purnendu Kumar Ghosh — Full-Stack · Cloud · AI</title>
+    <meta name="description" content="Portfolio of Purnendu Kumar Ghosh — full-stack developer across cloud, security and AI. Explore a 3D skill constellation, read the codex and bust tech myths in 3D.">
+    <meta name="theme-color" content="#05070a">
+    <meta property="og:title" content="Purnendu Kumar Ghosh — PKG//OS">
+    <meta property="og:description" content="A hacker-themed portfolio: 3D skill constellation, an ancient codex résumé and a Myth Lab.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2305070a'/%3E%3Cpath d='M14 46V18h14a9 9 0 0 1 0 18H20' fill='none' stroke='%233dff8f' stroke-width='5'/%3E%3Cpath d='M40 18v28M40 32l12-14M40 32l12 14' fill='none' stroke='%23e7b75f' stroke-width='5'/%3E%3C/svg%3E">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Runic&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <!-- Scanline overlay -->
-    <div class="scanlines"></div>
+    <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- Matrix rain canvas -->
-    <canvas id="matrix-bg"></canvas>
-
-    <!-- Desktop icons -->
-    <div class="desktop" id="desktop">
-        <div class="icon" data-cmd="cat about.txt" title="cat about.txt">
-            <i class="fas fa-file-alt"></i>
-            <span>about.txt</span>
+    <!-- ===== BOOT INTRO ===== -->
+    <div class="boot" id="boot" aria-hidden="true">
+        <div class="boot-inner">
+            <div class="boot-sigil">PKG<b>//</b>OS</div>
+            <pre class="boot-log" id="boot-log"></pre>
+            <div class="boot-bar"><span id="boot-bar"></span></div>
+            <div class="boot-welcome glitch" id="boot-welcome" data-text="WELCOME, TRAVELLER">WELCOME, TRAVELLER</div>
         </div>
-        <div class="icon" data-cmd="open projects" title="open projects">
-            <i class="fas fa-folder"></i>
-            <span>projects/</span>
-        </div>
-        <div class="icon" data-cmd="cat skills.json" title="cat skills.json">
-            <i class="fas fa-file-code"></i>
-            <span>skills.json</span>
-        </div>
-        <div class="icon" data-cmd="cat contact.txt" title="cat contact.txt">
-            <i class="fas fa-address-book"></i>
-            <span>contact.txt</span>
-        </div>
-        <div class="icon" data-cmd="cat resume.md" title="cat resume.md">
-            <i class="fas fa-id-badge"></i>
-            <span>resume.md</span>
-        </div>
-        <div class="icon" data-cmd="neofetch" title="neofetch">
-            <i class="fas fa-terminal"></i>
-            <span>neofetch</span>
-        </div>
+        <button class="boot-skip" id="boot-skip" type="button">skip intro · esc</button>
     </div>
 
-    <!-- Terminal window -->
-    <div class="terminal-container" id="terminal-container">
-        <div class="terminal-header">
-            <div class="term-buttons">
-                <span class="term-btn close" title="Close"></span>
-                <span class="term-btn minimize" title="Minimize"></span>
-                <span class="term-btn maximize" title="Maximize"></span>
+    <!-- ===== GLOBAL FX ===== -->
+    <div class="fx-grid" aria-hidden="true"></div>
+    <div class="fx-noise" aria-hidden="true"></div>
+    <div class="fx-scan" aria-hidden="true"></div>
+    <canvas class="matrix" id="matrix" aria-hidden="true"></canvas>
+    <div class="cursor" id="cursor" aria-hidden="true">
+        <div class="cursor-ring"><span class="cursor-label" id="cursor-label"></span></div>
+        <div class="cursor-dot"></div>
+        <div class="cursor-xy" id="cursor-xy"></div>
+    </div>
+    <div class="progress" id="progress" aria-hidden="true"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <!-- ===== NAV ===== -->
+    <header class="nav" id="nav">
+        <a href="#top" class="nav-logo" aria-label="Back to top">
+            <span>PKG<b>//</b></span><small>OS</small>
+        </a>
+        <nav class="nav-links" id="nav-links" aria-label="Primary">
+            <a href="#shell"><i>01</i>Shell</a>
+            <a href="#skills"><i>02</i>Skills</a>
+            <a href="#codex"><i>03</i>Codex</a>
+            <a href="#myths"><i>04</i>Myth Lab</a>
+            <a href="#contact"><i>05</i>Contact</a>
+        </nav>
+        <div class="nav-status">
+            <span class="nav-lamp"><i></i>SECURE</span>
+            <span class="nav-clock" id="nav-clock">--:--:--</span>
+        </div>
+        <button class="nav-burger" id="nav-burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+            <span></span><span></span>
+        </button>
+    </header>
+
+    <main id="main">
+        <!-- ===== HERO ===== -->
+        <section class="hero" id="top">
+            <div class="hero-canvas" id="hero-canvas" data-cursor="drag"></div>
+            <div class="hero-hud" aria-hidden="true">
+                <span class="hud-tag a">CORE · ONLINE</span>
+                <span class="hud-tag b">ASTROLABE · 3 RINGS</span>
+                <span class="hud-tag c" id="hero-readout">θ 000.0° · φ 000.0°</span>
             </div>
-            <div class="term-title" id="term-title">guest@portfolio: ~/home</div>
-        </div>
-        <div class="terminal-body" id="terminal-body">
-            <div class="output" id="output"></div>
-            <div class="input-line">
-                <span class="prompt" id="prompt">guest@portfolio:~$</span>
-                <input type="text" id="cmd-input" autocomplete="off" spellcheck="false" autofocus>
-                <span class="cursor-blink"></span>
+
+            <div class="hero-content">
+                <p class="eyebrow"><span class="dot"></span>SYSTEM://IDENTITY</p>
+                <h1 class="hero-name">
+                    <span class="scramble" data-final="PURNENDU">PURNENDU</span>
+                    <span class="scramble outline" data-final="KUMAR GHOSH">KUMAR GHOSH</span>
+                </h1>
+                <p class="hero-role"><span class="sym">&gt;</span><span id="role-typer">Full-Stack Developer</span><span class="caret"></span></p>
+                <p class="hero-tag">
+                    I build secure, cloud-native systems and intelligent apps — with the patience of an
+                    <em>ancient craftsman</em> and the toolkit of a <em>modern hacker</em>.
+                </p>
+                <div class="hero-cta">
+                    <a href="#shell" class="btn btn-primary" data-cursor="enter"><span class="g">▶</span>Open the shell</a>
+                    <a href="#codex" class="btn btn-ghost" data-cursor="read"><span class="g rune">ᚱ</span>Read the codex</a>
+                </div>
+                <dl class="hero-meta">
+                    <div><dt>Degree</dt><dd>B.Tech CSE · 2026</dd></div>
+                    <div><dt>Seals</dt><dd><span id="cert-count">3</span> certifications</dd></div>
+                    <div><dt>Status</dt><dd class="ok" id="hero-status">Open to opportunities</dd></div>
+                </dl>
             </div>
+
+            <a href="#shell" class="scroll-cue" aria-label="Scroll down"><span>scroll</span><i></i></a>
+        </section>
+
+        <!-- ===== TICKER ===== -->
+        <div class="ticker" aria-label="Tech history facts">
+            <div class="ticker-label"><i></i>INTEL FEED</div>
+            <div class="ticker-track"><div class="ticker-move" id="ticker-move"></div></div>
         </div>
-    </div>
 
-    <div class="taskbar">
-        <span class="taskbar-left"><i class="fas fa-terminal"></i> PortfolioOS v3.7</span>
-        <span class="taskbar-right" id="clock"></span>
-    </div>
+        <!-- ===== 01 SHELL ===== -->
+        <section class="section" id="shell">
+            <header class="section-head reveal">
+                <p class="kicker"><b>01</b> // THE SHELL</p>
+                <h2 class="title scramble" data-final="Talk to the machine.">Talk to the machine.</h2>
+                <p class="sub">A working portfolio terminal. Type <code>help</code>, try <code>whoami</code>, <code>skills</code> or <code>resume</code> — or tap a command below. Tab completes, ↑ ↓ walk your history.</p>
+            </header>
 
-    <script src="script.js"></script>
+            <div class="shell-grid">
+                <div class="term panel reveal" id="term" data-cursor="type">
+                    <div class="term-bar">
+                        <div class="term-dots"><i></i><i></i><i></i></div>
+                        <div class="term-title" id="term-title">guest@pkg-os: ~</div>
+                        <div class="term-tag">pkg-sh 4.2</div>
+                    </div>
+                    <div class="term-body" id="term-body">
+                        <div class="term-out" id="term-out" role="log" aria-live="polite"></div>
+                        <form class="term-line" id="term-form" autocomplete="off">
+                            <label class="term-prompt" id="term-prompt" for="term-input">guest@pkg-os:~$</label>
+                            <input class="term-input" id="term-input" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" enterkeyhint="send">
+                        </form>
+                    </div>
+                    <div class="term-chips" id="term-chips" aria-label="Quick commands"></div>
+                </div>
+
+                <aside class="sysinfo panel reveal" aria-label="System information">
+                    <div class="sys-head">
+                        <span class="kicker-sm">NODE STATUS</span>
+                        <span class="sys-live"><i></i>LIVE</span>
+                    </div>
+                    <div class="sys-sigil" id="sys-sigil" aria-hidden="true"></div>
+                    <ul class="sys-list">
+                        <li><span>user</span><b>guest</b></li>
+                        <li><span>host</span><b>pkg-os</b></li>
+                        <li><span>kernel</span><b>codex-6.1</b></li>
+                        <li><span>uptime</span><b id="sys-uptime">00:00:00</b></li>
+                        <li><span>commands run</span><b id="sys-cmds">0</b></li>
+                        <li><span>local time</span><b id="sys-time">--:--</b></li>
+                    </ul>
+                    <div class="sys-meter">
+                        <div class="meter-row"><span>CPU</span><div class="meter"><i id="m-cpu"></i></div></div>
+                        <div class="meter-row"><span>MEM</span><div class="meter"><i id="m-mem"></i></div></div>
+                        <div class="meter-row"><span>NET</span><div class="meter"><i id="m-net"></i></div></div>
+                    </div>
+                    <p class="sys-note">Meters are decorative. The shell is real.</p>
+                </aside>
+            </div>
+        </section>
+
+        <!-- ===== 02 SKILLS ===== -->
+        <section class="section" id="skills">
+            <header class="section-head reveal">
+                <p class="kicker"><b>02</b> // SKILL CONSTELLATION</p>
+                <h2 class="title scramble" data-final="Every star is a skill.">Every star is a skill.</h2>
+                <p class="sub">Drag to spin the sphere. Hover or tap a star to read its rune, its ancient name and a piece of real history.</p>
+            </header>
+
+            <div class="skills-wrap reveal">
+                <div class="skills-filters" id="skills-filters" role="toolbar" aria-label="Filter skills by category"></div>
+                <div class="skills-stage panel" id="skills-stage" data-cursor="drag">
+                    <div class="skills-canvas" id="skills-canvas"></div>
+                    <div class="skills-labels" id="skills-labels"></div>
+                    <div class="skills-hint" aria-hidden="true">⟲ drag · hover · tap</div>
+                    <article class="skill-card" id="skill-card" aria-live="polite">
+                        <div class="skill-rune rune" id="sk-rune">ᛟ</div>
+                        <p class="skill-cat" id="sk-cat">CONSTELLATION</p>
+                        <h3 class="skill-name" id="sk-name">23 stars · 6 schools</h3>
+                        <p class="skill-title" id="sk-title">Hover a star to read its lore.</p>
+                        <p class="skill-lore" id="sk-lore">Each skill sits in its school’s region of the sky. Lines join technologies I use together.</p>
+                        <div class="skill-links" id="sk-links"></div>
+                    </article>
+                </div>
+                <div class="skills-index" id="skills-index" aria-label="Skill index"></div>
+            </div>
+        </section>
+
+        <!-- ===== 03 CODEX ===== -->
+        <section class="section" id="codex">
+            <header class="section-head reveal">
+                <p class="kicker"><b>03</b> // THE CODEX</p>
+                <h2 class="title scramble" data-final="Résumé, in the old tongue.">Résumé, in the old tongue.</h2>
+                <p class="sub">Transcribed from runes on scroll. Need a plain copy? <button class="link-btn" id="print-btn" type="button">Print / save as PDF</button></p>
+            </header>
+
+            <div class="codex">
+                <aside class="codex-id panel reveal">
+                    <div class="seal" id="seal" aria-hidden="true"></div>
+                    <h3 class="codex-name" id="codex-name">Purnendu Kumar Ghosh</h3>
+                    <p class="codex-role">Full-Stack Developer</p>
+                    <p class="codex-summary" id="codex-summary"></p>
+                    <ul class="codex-links" id="codex-links"></ul>
+                    <div class="codex-stamp">ARCHIVED · MMXXVI</div>
+                </aside>
+
+                <div class="codex-book">
+                    <article class="chapter panel reveal">
+                        <header class="chapter-head"><span class="numeral">I</span><div><h3>Origins</h3><p>Education</p></div><span class="rune-line rune">ᚠᚢᚦᚨᚱᚲ</span></header>
+                        <div class="entries" id="ch-education"></div>
+                    </article>
+                    <article class="chapter panel reveal">
+                        <header class="chapter-head"><span class="numeral">II</span><div><h3>Campaigns</h3><p>Experience</p></div><span class="rune-line rune">ᚷᚹᚺᚾᛁᛃ</span></header>
+                        <div class="entries" id="ch-experience"></div>
+                    </article>
+                    <article class="chapter panel reveal">
+                        <header class="chapter-head"><span class="numeral">III</span><div><h3>Seals of Mastery</h3><p>Certifications</p></div><span class="rune-line rune">ᛇᛈᛉᛊᛏᛒ</span></header>
+                        <div class="seals" id="ch-certs"></div>
+                    </article>
+                    <article class="chapter panel reveal">
+                        <header class="chapter-head"><span class="numeral">IV</span><div><h3>Artifacts Forged</h3><p>Projects</p></div><span class="rune-line rune">ᛖᛗᛚᛜᛞᛟ</span></header>
+                        <div class="artifacts" id="ch-projects"></div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===== 04 MYTH LAB ===== -->
+        <section class="section" id="myths">
+            <header class="section-head reveal">
+                <p class="kicker"><b>04</b> // MYTH LAB</p>
+                <h2 class="title scramble" data-final="Myths, busted in three dimensions.">Myths, busted in three dimensions.</h2>
+                <p class="sub">From bronze gears to qubits. Grab any model and turn it, play with the controls, then hit <b>Bust it</b> to see the evidence.</p>
+            </header>
+            <div class="myth-grid" id="myth-grid"></div>
+        </section>
+
+        <!-- ===== 05 CONTACT ===== -->
+        <section class="section" id="contact">
+            <header class="section-head reveal">
+                <p class="kicker"><b>05</b> // OPEN CHANNEL</p>
+                <h2 class="title scramble" data-final="Send a message.">Send a message.</h2>
+                <p class="sub">Write a note and watch it being carved in Elder Futhark runes as you type. It reaches me as an ordinary email — the runes are just for style.</p>
+            </header>
+
+            <div class="contact-grid">
+                <div class="channels reveal" id="channels"></div>
+
+                <form class="composer panel reveal" id="composer">
+                    <div class="composer-head">
+                        <span class="kicker-sm">NEW MESSAGE</span>
+                        <span class="cipher-tag">SCRIPT · ELDER FUTHARK</span>
+                    </div>
+                    <label class="field">
+                        <span>Your name</span>
+                        <input type="text" id="c-name" name="name" placeholder="Ada Lovelace" required>
+                    </label>
+                    <label class="field">
+                        <span>Message</span>
+                        <textarea id="c-msg" name="message" rows="4" placeholder="Hi Purnendu, I'd like to talk about…" required></textarea>
+                    </label>
+                    <div class="cipher-out" aria-live="polite">
+                        <span class="kicker-sm">CARVED IN RUNES</span>
+                        <p id="rune-text" class="rune">ᚺᛖᛚᛚᛟ ᚠᚱᛟᛗ ᛏᚺᛖ ᛟᛚᛞ ᚹᛟᚱᛚᛞ</p>
+                    </div>
+                    <button class="btn btn-primary" type="submit" data-cursor="send"><span class="g">⟶</span>Send via email</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-inner">
+            <div class="footer-brand">PKG<b>//</b>OS</div>
+            <p>© <span id="year">2026</span> Purnendu Kumar Ghosh · Hand-built with HTML, CSS, JavaScript &amp; Three.js</p>
+            <p class="footer-egg">↑ ↑ ↓ ↓ ← → ← → B A</p>
+        </div>
+    </footer>
+
+    <noscript><p class="noscript">This portfolio is interactive and needs JavaScript. The résumé content is in <code>js/data.js</code>.</p></noscript>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.149.0/build/three.min.js" defer></script>
+    <script src="js/data.js" defer></script>
+    <script src="js/x3.js" defer></script>
+    <script src="js/fx.js" defer></script>
+    <script src="js/hero3d.js" defer></script>
+    <script src="js/skills3d.js" defer></script>
+    <script src="js/myths3d.js" defer></script>
+    <script src="js/terminal.js" defer></script>
+    <script src="js/main.js" defer></script>
 </body>
 </html>
