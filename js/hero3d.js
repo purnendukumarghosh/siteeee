@@ -56,9 +56,9 @@
 
         /* --- Astrolabe rings --- */
         const ringDefs = [
-            { r: 2.0, color: GOLD, tilt: [1.25, 0.2], speed: 0.22, ticks: 60 },
-            { r: 2.7, color: GREEN, tilt: [1.7, -0.55], speed: -0.13, ticks: 96, runes: true },
-            { r: 3.45, color: GOLD, tilt: [0.95, 0.8], speed: 0.07, ticks: 120 }
+            { r: 2.0, color: GOLD, tilt: [0.5, 0.35], speed: 0.22, ticks: 60 },
+            { r: 2.7, color: GREEN, tilt: [1.1, -0.75], speed: -0.13, ticks: 96, runes: true },
+            { r: 3.45, color: GOLD, tilt: [-0.55, 0.6], speed: 0.07, ticks: 120 }
         ];
         const spins = [];
         const runeHolders = [];
@@ -169,8 +169,8 @@
                 rig.position.set(halfW * 0.46, 0.1, 0);
                 rig.scale.setScalar(Math.min(1, halfW / 6));
             } else {
-                rig.position.set(0, 1.6, 0);
-                rig.scale.setScalar(0.72);
+                rig.position.set(0, 2.2, 0);
+                rig.scale.setScalar(0.66);
             }
         };
         layout();
