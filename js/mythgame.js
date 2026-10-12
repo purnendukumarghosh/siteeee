@@ -213,7 +213,7 @@
         g.fillStyle = '#eafff4';
         lines.forEach((l, i) => g.fillText(l, pad, pad + 46 + 36 + i * lh));
         const tex = new THREE.CanvasTexture(c);
-        tex.minFilter = THREE.LinearFilter;
+        tex.anisotropy = 4;
         return { tex: tex, aspect: H / W };
     }
 
@@ -268,7 +268,10 @@
         const add = (geo, m, withEdges) => {
             const mesh = new THREE.Mesh(geo, m || mat);
             g.add(mesh);
-            if (withEdges !== false) mesh.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), edgeMat));
+            if (withEdges !== false) {
+                if (!geo.userData.edges) geo.userData.edges = new THREE.EdgesGeometry(geo, 20);
+                mesh.add(new THREE.LineSegments(geo.userData.edges, edgeMat));
+            }
             return mesh;
         };
         if (kind === 'gear') {
@@ -333,7 +336,7 @@
             '<div class="mg-hud" hidden>' +
             '  <div class="mg-stat"><span>SCORE</span><b data-k="score">0</b></div>' +
             '  <div class="mg-stat"><span>COMBO</span><b data-k="combo">×1</b></div>' +
-            '  <div class="mg-stat"><span>MYTHS BUSTED</span><b data-k="busted">0/' + MYTH_TOTAL + '</b></div>' +
+            '  <div class="mg-stat"><span>BUSTED</span><b data-k="busted">0/' + MYTH_TOTAL + '</b></div>' +
             '  <div class="mg-stat"><span>SHIELDS</span><b class="mg-shields" data-k="shields"></b></div>' +
             '  <div class="mg-tools"><button type="button" class="mini-btn" data-act="sound"></button><button type="button" class="mini-btn" data-act="pause">PAUSE</button></div>' +
             '  <div class="mg-progress"><i data-k="progress"></i></div>' +
@@ -440,6 +443,7 @@
         floor.material.transparent = true;
         floor.material.opacity = 0.55;
         floor.position.y = -2.4;
+        floor.renderOrder = -1;
         scene.add(floor);
 
         /* warp streaks */
@@ -454,24 +458,26 @@
         const starGeo = new THREE.BufferGeometry();
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
         const stars = new THREE.Points(starGeo, new THREE.PointsMaterial({ color: CYAN, size: 0.12, map: X3.glowTexture(), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+        stars.renderOrder = -1;
         scene.add(stars);
 
         /* the "astrolabe cannon" */
         const cannon = new THREE.Group();
-        cannon.position.set(0, -1.15, 6.4);
+        cannon.position.set(0, -0.5, 4.9);
+        cannon.scale.setScalar(0.72);
         const cannonBase = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.05, 8, 40), new THREE.MeshStandardMaterial({ color: GOLD, metalness: 0.8, roughness: 0.3, emissive: 0x3a2808 }));
         cannonBase.rotation.x = Math.PI / 2;
         cannon.add(cannonBase);
         const barrel = new THREE.Group();
         const barrelMesh = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.12, 1.1, 14), new THREE.MeshStandardMaterial({ color: 0x15302a, metalness: 0.7, roughness: 0.35, emissive: 0x0a3a24 }));
         barrelMesh.rotation.x = Math.PI / 2;
-        barrelMesh.position.z = -0.5;
+        barrelMesh.position.z = 0.5;
         barrel.add(barrelMesh);
         const barrelRing = new THREE.Mesh(new THREE.TorusGeometry(0.13, 0.025, 6, 24), new THREE.MeshBasicMaterial({ color: GREEN }));
-        barrelRing.position.z = -1.05;
+        barrelRing.position.z = 1.05;
         barrel.add(barrelRing);
         const muzzle = X3.glow(GREEN, 0.01, 0.95);
-        muzzle.position.z = -1.12;
+        muzzle.position.z = 1.12;
         barrel.add(muzzle);
         cannon.add(barrel);
         scene.add(cannon);
@@ -617,6 +623,7 @@
             t.spin = new THREE.Vector3(rand(-0.6, 0.6), rand(0.4, 1.1) * (Math.random() < 0.5 ? -1 : 1), rand(-0.3, 0.3));
             t.phase = rand(0, 6);
             scene.add(t.group);
+            t.group.updateMatrixWorld(true);
             targets.push(t);
             return true;
         }
@@ -628,6 +635,7 @@
             t.mat.dispose();
             t.edge.dispose();
             t.accent.dispose();
+            t.glow.material.dispose();
             targets = targets.filter((x) => x !== t);
             if (hovered === t) hovered = null;
         }
@@ -822,11 +830,12 @@
         window.addEventListener('keydown', (e) => {
             const tag = (e.target && e.target.tagName) || '';
             if (/INPUT|TEXTAREA|SELECT/.test(tag) || (e.target && e.target.isContentEditable)) return;
-            if (!inView) return;
-            if (state === 'playing' && (e.key === '1' || e.key === '2' || e.key === '3')) {
+            if (!inView || e.ctrlKey || e.metaKey || e.altKey) return;
+            const m = /^(?:Digit|Numpad)([123])$/.exec(e.code || '') || /^([123])$/.exec(e.key);
+            if (state === 'playing' && m) {
                 e.preventDefault();
-                shootSlot(parseInt(e.key, 10));
-            } else if (e.key === 'p' || e.key === 'P') {
+                if (!e.repeat) shootSlot(parseInt(m[1], 10));
+            } else if ((e.code === 'KeyP' || e.key === 'p' || e.key === 'P') && !e.repeat) {
                 if (state === 'playing') pause();
                 else if (state === 'paused') resume();
             }
@@ -915,18 +924,33 @@
         if ('IntersectionObserver' in window) {
             new IntersectionObserver((entries) => {
                 entries.forEach((en) => {
-                    inView = en.isIntersecting;
+                    inView = en.isIntersecting && en.intersectionRatio >= 0.3;
                     if (!inView) pause();
                 });
-            }, { threshold: 0.35 }).observe(root);
+            }, { threshold: [0, 0.3, 0.6] }).observe(root);
         } else inView = true;
         document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
+        window.addEventListener('blur', pause);
         const vis = X3.watch(root);
+
+        /* warm up shader programs used later (targets, labels, beams, waves) */
+        (function warm() {
+            const g = new THREE.Group();
+            g.add(buildShape('chip', baseMat, edgeMat, accentMat));
+            g.add(new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, depthWrite: false, fog: false })));
+            g.add(new THREE.Mesh(new THREE.RingGeometry(0.85, 1, 8), new THREE.MeshBasicMaterial({ transparent: true, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending })));
+            g.add(new THREE.Mesh(beamGeo, new THREE.MeshBasicMaterial({ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false })));
+            g.position.z = -10;
+            scene.add(g);
+            try { renderer.compile(scene, camera); } catch (e) { /* ignore */ }
+            scene.remove(g);
+        })();
 
         /* ----- layout ----- */
         const layout = () => {
             const w = wrap.clientWidth, h = wrap.clientHeight;
             if (!w || !h) return;
+            renderer.setPixelRatio(X3.dpr());
             renderer.setSize(w, h, false);
             camera.aspect = w / h;
             camera.fov = camera.aspect < 0.9 ? 68 : 55;
@@ -944,7 +968,7 @@
             requestAnimationFrame(loop);
             const dt = Math.min(0.05, (now - last) / 1000);
             last = now;
-            if (!vis.visible || document.hidden) return;
+            if (!vis.visible || document.hidden || state === 'paused') return;
             const t = now / 1000;
             const playing = state === 'playing';
             const flow = (playing ? 1 : state === 'paused' ? 0 : 0.35) * (X3.reduced ? 0.5 : 1);
@@ -1032,7 +1056,7 @@
             } else aimPoint.lerp(tmp.set(0, 1, -20), dt * 2);
             barrel.lookAt(aimPoint);
             recoil = Math.max(0, recoil - dt * 6);
-            barrel.position.z = recoil * 0.18;
+            barrel.position.z = recoil * 0.16;
             muzzleFlash = Math.max(0, muzzleFlash - dt * 7);
             muzzle.scale.setScalar(0.01 + muzzleFlash * 1.4);
             cannonBase.rotation.z += dt * 0.8;
@@ -1107,8 +1131,13 @@
         requestAnimationFrame(loop);
 
         api.start = () => {
+            const a = document.activeElement;
+            if (a && !root.contains(a) && /INPUT|TEXTAREA|SELECT/.test(a.tagName)) a.blur();
             root.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            setTimeout(() => { if (state !== 'playing') startGame(); }, 650);
+            setTimeout(() => {
+                if (state === 'paused') resume();
+                else if (state !== 'playing') startGame();
+            }, 650);
         };
         return api;
     };
