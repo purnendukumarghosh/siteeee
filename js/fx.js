@@ -178,10 +178,10 @@
                 c.classList.remove('is-hover');
                 return;
             }
-            const big = t.matches('a, button') || (t.dataset.cursor && t.dataset.cursor !== 'type' && t.dataset.cursor !== 'drag');
+            const big = t.matches('a, button') || (t.dataset.cursor && t.dataset.cursor !== 'type' && t.dataset.cursor !== 'drag' && t.dataset.cursor !== 'aim');
             c.classList.toggle('is-hover', !!big);
             label.textContent = t.dataset.cursor || (t.matches('a') ? 'open' : 'click');
-            if (t.dataset.cursor === 'drag') {
+            if (t.dataset.cursor === 'drag' || t.dataset.cursor === 'aim') {
                 c.classList.remove('is-hover');
             }
         });
