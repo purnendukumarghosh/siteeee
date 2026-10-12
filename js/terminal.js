@@ -76,7 +76,6 @@
         };
         const contact = () => {
             const L = P.links;
-            print('<span class="t-gold">github  </span> <a class="t-link" href="' + esc(L.github) + '" target="_blank" rel="noopener">' + esc(L.github.replace(/^https?:\/\//, '')) + '</a>');
             print('<span class="t-gold">linkedin</span> <a class="t-link" href="' + esc(L.linkedin) + '" target="_blank" rel="noopener">' + esc(L.linkedin.replace(/^https?:\/\//, '')) + '</a>');
             print('<span class="t-gold">email   </span> <a class="t-link" href="mailto:' + esc(L.email) + '">' + esc(L.email) + '</a>');
         };
