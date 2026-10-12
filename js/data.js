@@ -20,7 +20,7 @@ window.PROFILE = {
     // TODO: replace the placeholders below with your real links.
     links: {
         github: 'https://github.com/purnendukumarghosh',
-        linkedin: 'https://linkedin.com/in/tech-student',
+        linkedin: 'https://www.linkedin.com/in/purnendu-ghosh-b217161b4',
         email: 'student@example.com'
     },
 
