@@ -72,8 +72,6 @@
                 print('  ' + esc(e.title) + ' @ ' + esc(e.org) + ' <span class="t-dim">(' + esc(e.when) + ')</span>');
                 e.points.forEach((p) => print('  · ' + esc(p), 't-muted'));
             });
-            print('<span class="t-cyan">## Certifications</span>');
-            P.certifications.forEach((c) => print('  ' + esc(c.title) + ' <span class="t-dim">[' + esc(c.code) + ']</span>'));
             print('<span class="t-dim">→ full codex: </span>' + cmdLink('goto codex'));
         };
         const contact = () => {
@@ -129,7 +127,6 @@
             },
             projects: { d: 'things I have built', f: projects },
             resume: { d: 'print the résumé', f: resume },
-            certs: { d: 'certifications', f: () => P.certifications.forEach((c) => print('<span class="t-runes">' + c.glyph + '</span> ' + esc(c.title) + ' <span class="t-dim">[' + esc(c.code) + ']</span>')) },
             contact: { d: 'ways to reach me', f: contact },
             neofetch: { d: 'system summary', f: neofetch },
             ls: {
@@ -165,6 +162,7 @@
                     if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 250);
                 }
             },
+            play: { d: 'play Myth Buster, the 3D game', f: () => { print('<span class="t-acc">loading Myth Buster…</span> <span class="t-dim">blast the myths, spare the facts.</span>'); if (opts.startGame) opts.startGame(); } },
             matrix: { d: 'toggle digital rain', f: () => { const on = opts.toggleMatrix && opts.toggleMatrix(); print(on ? '<span class="t-acc">wake up, neo…</span>' : '<span class="t-dim">rain stopped.</span>'); } },
             date: { d: 'current date and time', f: () => print(new Date().toString()) },
             echo: { d: 'print text', f: (args) => print(esc(args.join(' '))) },
@@ -243,7 +241,7 @@
         }
 
         /* chips */
-        ['help', 'whoami', 'skills', 'projects', 'resume', 'neofetch', 'fact', 'contact', 'clear'].forEach((c) => {
+        ['help', 'whoami', 'skills', 'projects', 'resume', 'play', 'neofetch', 'fact', 'contact', 'clear'].forEach((c) => {
             const b = document.createElement('button');
             b.type = 'button';
             b.className = 'chip';

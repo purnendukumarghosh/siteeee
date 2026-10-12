@@ -44,6 +44,7 @@ window.PROFILE = {
         }
     ],
 
+    // Not currently shown on the site (the "Seals of Mastery" chapter was removed).
     certifications: [
         { title: 'Oracle Cloud Infrastructure 2025 AI Foundations Associate', code: '1Z0-1122-25', glyph: 'ᛟ' },
         { title: 'DORA Compliance in the EU for Financial Services', code: 'EU · DORA', glyph: 'ᛉ' },

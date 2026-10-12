@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Purnendu Kumar Ghosh — Full-Stack · Cloud · AI</title>
-    <meta name="description" content="Portfolio of Purnendu Kumar Ghosh — full-stack developer across cloud, security and AI. Explore a 3D skill constellation, read the codex and bust tech myths in 3D.">
+    <meta name="description" content="Portfolio of Purnendu Kumar Ghosh — full-stack developer across cloud, security and AI. Explore a 3D skill constellation, read the codex and play Myth Buster, a 3D game.">
     <meta name="theme-color" content="#05070a">
     <meta property="og:title" content="Purnendu Kumar Ghosh — PKG//OS">
-    <meta property="og:description" content="A hacker-themed portfolio: 3D skill constellation, an ancient codex résumé and a Myth Lab.">
+    <meta property="og:description" content="A hacker-themed portfolio: 3D skill constellation, an ancient codex résumé and the Myth Buster game.">
     <meta property="og:type" content="website">
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2305070a'/%3E%3Cpath d='M14 46V18h14a9 9 0 0 1 0 18H20' fill='none' stroke='%233dff8f' stroke-width='5'/%3E%3Cpath d='M40 18v28M40 32l12-14M40 32l12 14' fill='none' stroke='%23e7b75f' stroke-width='5'/%3E%3C/svg%3E">
 
@@ -91,7 +91,7 @@
                 </div>
                 <dl class="hero-meta">
                     <div><dt>Degree</dt><dd>B.Tech CSE · 2026</dd></div>
-                    <div><dt>Seals</dt><dd><span id="cert-count">3</span> certifications</dd></div>
+                    <div><dt>Focus</dt><dd>Cloud · Security · AI</dd></div>
                     <div><dt>Status</dt><dd class="ok" id="hero-status">Open to opportunities</dd></div>
                 </dl>
             </div>
@@ -209,11 +209,7 @@
                         <div class="entries" id="ch-experience"></div>
                     </article>
                     <article class="chapter panel reveal">
-                        <header class="chapter-head"><span class="numeral">III</span><div><h3>Seals of Mastery</h3><p>Certifications</p></div><span class="rune-line rune">ᛇᛈᛉᛊᛏᛒ</span></header>
-                        <div class="seals" id="ch-certs"></div>
-                    </article>
-                    <article class="chapter panel reveal">
-                        <header class="chapter-head"><span class="numeral">IV</span><div><h3>Artifacts Forged</h3><p>Projects</p></div><span class="rune-line rune">ᛖᛗᛚᛜᛞᛟ</span></header>
+                        <header class="chapter-head"><span class="numeral">III</span><div><h3>Artifacts Forged</h3><p>Projects</p></div><span class="rune-line rune">ᛖᛗᛚᛜᛞᛟ</span></header>
                         <div class="artifacts" id="ch-projects"></div>
                     </article>
                 </div>
@@ -224,10 +220,14 @@
         <section class="section" id="myths">
             <header class="section-head reveal">
                 <p class="kicker"><b>04</b> // MYTH LAB</p>
-                <h2 class="title scramble" data-final="Myths, busted in three dimensions.">Myths, busted in three dimensions.</h2>
-                <p class="sub">From bronze gears to qubits. Grab any model and turn it, play with the controls, then hit <b>Bust it</b> to see the evidence.</p>
+                <h2 class="title scramble" data-final="Myth Buster: the game.">Myth Buster: the game.</h2>
+                <p class="sub">Claims about technology fly out of an ancient data tunnel. <b>Blast the myths</b>, <b>let the facts fly past</b> — every myth you bust reveals the real story.</p>
             </header>
-            <div class="myth-grid" id="myth-grid"></div>
+            <div class="mg panel reveal" id="mg" data-cursor="aim"></div>
+            <details class="mg-codex panel reveal">
+                <summary>Skip the game — read every myth and fact</summary>
+                <ol class="mg-list" id="mg-list"></ol>
+            </details>
         </section>
 
         <!-- ===== 05 CONTACT ===== -->
@@ -280,7 +280,7 @@
     <script src="js/fx.js" defer></script>
     <script src="js/hero3d.js" defer></script>
     <script src="js/skills3d.js" defer></script>
-    <script src="js/myths3d.js" defer></script>
+    <script src="js/mythgame.js" defer></script>
     <script src="js/terminal.js" defer></script>
     <script src="js/main.js" defer></script>
 </body>

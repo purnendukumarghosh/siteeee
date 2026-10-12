@@ -34,13 +34,10 @@
             '<p class="org">' + esc(e.org) + '</p><ul>' + e.points.map((p) => '<li>' + esc(p) + '</li>').join('') + '</ul></div>';
         $('ch-education').innerHTML = P.education.map(entry).join('');
         $('ch-experience').innerHTML = P.experience.map(entry).join('');
-        $('ch-certs').innerHTML = P.certifications.map((c) =>
-            '<div class="seal-card"><span class="glyph">' + esc(c.glyph) + '</span><h4>' + esc(c.title) + '</h4><code>' + esc(c.code) + '</code></div>').join('');
         $('ch-projects').innerHTML = P.projects.map((p) =>
             '<div class="artifact"><span class="codename">' + esc(p.codename) + '</span><h4 class="decrypt">' + esc(p.title) + '</h4><p>' + esc(p.desc) + '</p>' +
             '<div class="tags">' + p.tags.map((t) => '<span>' + esc(t) + '</span>').join('') + '</div></div>').join('');
 
-        $('cert-count').textContent = String(P.certifications.length);
         $('hero-status').textContent = P.status;
         $('year').textContent = String(new Date().getFullYear());
         $('print-btn').addEventListener('click', () => window.print());
@@ -101,10 +98,11 @@
 
         safe('hero', () => window.initHero($('hero-canvas'), $('hero-readout')));
         const skills = safe('skills', () => window.initSkills());
-        safe('myths', () => window.initMyths($('myth-grid')));
+        const game = safe('myth game', () => window.initMythGame($('mg'), $('mg-list')));
         safe('terminal', () => window.initTerminal({
             selectSkill: (id) => skills && skills.select(id),
-            toggleMatrix: FX.toggleMatrix
+            toggleMatrix: FX.toggleMatrix,
+            startGame: () => game && game.start()
         }));
 
         safe('reveal', FX.initReveal);
