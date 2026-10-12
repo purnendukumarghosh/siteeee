@@ -346,51 +346,6 @@ code { font-family: var(--mono); font-size: .9em; color: var(--acc); background:
 .meter i { display: block; height: 100%; width: 30%; background: linear-gradient(90deg, var(--acc-dim), var(--acc)); transition: width .8s var(--ease); }
 .sys-note { margin: 0; font: 400 11px var(--mono); color: var(--dim); }
 
-/* ===== SKILLS ===== */
-.skills-filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-.filter {
-    font: 500 12px var(--mono); padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line-2); color: var(--muted);
-    display: inline-flex; align-items: center; gap: 8px; transition: all .2s;
-}
-.filter i { width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--acc)); box-shadow: 0 0 8px var(--c, var(--acc)); }
-.filter:hover { color: var(--text); border-color: var(--c, var(--acc)); }
-.filter[aria-pressed="true"] { color: #031009; background: var(--c, var(--acc)); border-color: var(--c, var(--acc)); }
-.filter[aria-pressed="true"] i { background: #031009; box-shadow: none; }
-.skills-stage { position: relative; height: clamp(520px, 72vh, 700px); overflow: hidden; background: radial-gradient(ellipse at 40% 50%, rgba(61, 255, 143, .05), transparent 65%), rgba(4, 9, 11, .7); }
-.skills-canvas { position: absolute; inset: 0; touch-action: pan-y; }
-.skills-canvas canvas { width: 100% !important; height: 100% !important; }
-.skills-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-.skill-label {
-    position: absolute; left: 0; top: 0; pointer-events: auto; will-change: transform, opacity;
-    font: 500 12px var(--mono); color: var(--text); white-space: nowrap; padding: 6px 8px 6px 18px; margin: -15px 0 0 -9px;
-    text-shadow: 0 0 8px rgba(0, 0, 0, .9); transition: color .2s;
-}
-.skill-label::before { content: ''; position: absolute; left: 3px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; }
-.skill-label.is-back { pointer-events: none; }
-.skill-label.is-active { color: var(--c); font-weight: 700; }
-.skills-hint { position: absolute; left: 18px; bottom: 16px; font: 500 11px var(--mono); color: var(--dim); letter-spacing: .1em; pointer-events: none; }
-.skill-card {
-    position: absolute; right: 18px; top: 18px; width: min(320px, calc(100% - 36px)); padding: 20px 20px 18px;
-    background: rgba(5, 10, 12, .82); border: 1px solid var(--line-2); border-radius: 12px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    transition: border-color .3s;
-}
-.skill-card.has-skill { border-color: var(--c, var(--line-2)); box-shadow: 0 0 40px -10px var(--c, transparent); }
-.skill-rune { font-size: 44px; line-height: 1; color: var(--c, var(--gold)); text-shadow: 0 0 20px var(--c, var(--gold-glow)); margin-bottom: 12px; }
-.skill-cat { margin: 0; font: 600 10px var(--mono); letter-spacing: .22em; color: var(--c, var(--muted)); text-transform: uppercase; }
-.skill-name { margin: 4px 0 2px; font: 700 22px var(--sans); }
-.skill-title { margin: 0 0 10px; font: 500 14px var(--serif); color: var(--gold); letter-spacing: .04em; }
-.skill-lore { margin: 0; font-size: 14px; color: var(--muted); line-height: 1.55; }
-.skill-links { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.skill-links button { font: 500 11px var(--mono); padding: 4px 9px; border: 1px solid var(--line-2); border-radius: 999px; color: var(--muted); }
-.skill-links button:hover { color: var(--acc); border-color: var(--acc); }
-.skills-index { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 18px; margin-top: 22px; }
-.skills-index h4 { margin: 0 0 8px; font: 600 10px var(--mono); letter-spacing: .2em; text-transform: uppercase; color: var(--c); display: flex; align-items: center; gap: 8px; }
-.skills-index h4::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--c); }
-.skills-index ul { list-style: none; padding: 0; margin: 0; }
-.skills-index li button { font: 400 13px var(--mono); color: var(--muted); padding: 3px 0; text-align: left; transition: color .2s; }
-.skills-index li button:hover, .skills-index li button.on { color: var(--text); }
-.skills-index li button .rune { color: var(--gold-dim); margin-right: 8px; }
-
 /* ===== CODEX ===== */
 .codex { display: grid; grid-template-columns: 340px minmax(0, 1fr); gap: 20px; align-items: start; }
 .codex-id { position: sticky; top: calc(var(--nav-h) + 20px); padding: 28px; text-align: center; overflow: hidden; }
@@ -638,7 +593,6 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 0; bo
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 1100px) {
-    .skills-index { grid-template-columns: repeat(3, minmax(0, 1fr)); }
     .codex { grid-template-columns: 1fr; }
     .codex-id { position: relative; top: 0; display: grid; grid-template-columns: 170px 1fr; gap: 0 28px; text-align: left; align-items: start; }
     .codex-id .seal { grid-row: span 5; margin: 0; }
@@ -669,13 +623,6 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 0; bo
     .hero-meta div { padding-right: 16px; margin-right: 16px; }
     .term { height: 480px; }
     .term-body { font-size: 12.5px; padding: 14px 14px 6px; }
-    .skills-stage { height: 560px; }
-    .skill-card { top: auto; bottom: 12px; right: 12px; left: 12px; width: auto; padding: 14px 16px; }
-    .skill-rune { font-size: 30px; margin-bottom: 6px; float: right; margin-left: 12px; }
-    .skill-name { font-size: 18px; }
-    .skill-lore { font-size: 13px; }
-    .skills-hint { top: 14px; bottom: auto; left: 14px; }
-    .skills-index { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .codex-id { display: block; text-align: center; }
     .codex-id .seal { margin: 0 auto 16px; width: 140px; height: 140px; }
     .chapter-head { gap: 12px; }
@@ -725,7 +672,7 @@ input[type="range"]::-moz-range-thumb { width: 16px; height: 16px; border: 0; bo
     *, *::before, *::after { transition: none !important; animation: none !important; }
     body { background: #fff !important; color: #111 !important; font-size: 11pt; }
     .boot, .fx-grid, .fx-noise, .fx-scan, .matrix, .cursor, .progress, .toast, .nav, .hero, .ticker,
-    #shell, #skills, #myths, #contact, .footer, .skip-link, #codex .section-head .sub, .seal, .codex-stamp, .rune-line { display: none !important; }
+    #shell, #myths, #contact, .footer, .skip-link, #codex .section-head .sub, .seal, .codex-stamp, .rune-line { display: none !important; }
     .section { padding: 0 !important; max-width: none; }
     #codex .section-head { margin-bottom: 8mm; }
     #codex .kicker, #codex .title { display: none; }

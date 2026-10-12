@@ -94,10 +94,8 @@
         safe('konami', FX.initKonami);
 
         safe('hero', () => window.initHero($('hero-canvas'), $('hero-readout')));
-        const skills = safe('skills', () => window.initSkills());
         const game = safe('myth game', () => window.initMythGame($('mg'), $('mg-list')));
         safe('terminal', () => window.initTerminal({
-            selectSkill: (id) => skills && skills.select(id),
             toggleMatrix: FX.toggleMatrix,
             startGame: () => game && game.start()
         }));

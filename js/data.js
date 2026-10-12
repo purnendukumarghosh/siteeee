@@ -79,7 +79,7 @@ window.PROFILE = {
         }
     ],
 
-    /* Skill constellation.
+    /* Skills (listed by the terminal's `skills` / `skill <name>` commands).
        cat   → category id (see skillCats)
        rune  → glyph shown on the star
        title → its "ancient" name
@@ -144,13 +144,6 @@ window.PROFILE = {
           lore: 'Microsoft’s PPTP (1996) was one of the first widely used VPN protocols — and is now considered insecure.' },
         { id: 'dora', name: 'Compliance · DORA', cat: 'ai', rune: 'ᛟ', title: 'The Resilience Edict',
           lore: 'The EU Digital Operational Resilience Act has applied to financial entities since 17 January 2025.' }
-    ],
-    // Extra links between stars (same-category neighbours are linked automatically).
-    skillLinks: [
-        ['js', 'react'], ['js', 'node'], ['node', 'express'], ['python', 'django'], ['python', 'ml'],
-        ['docker', 'linux'], ['aws', 'docker'], ['redis', 'node'], ['postgres', 'django'], ['mongo', 'node'],
-        ['html', 'js'], ['netsec', 'linux'], ['netsec', 'aws'], ['oci', 'ml'], ['git', 'linux'],
-        ['dataviz', 'js'], ['dataviz', 'python'], ['dora', 'netsec'], ['java', 'cpp']
     ],
 
     // Scrolling "intel feed" of tech history.
