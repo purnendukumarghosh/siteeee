@@ -261,25 +261,115 @@
         setInterval(tick, 1000);
     };
 
-    /* ---------- role typer ---------- */
-    FX.typeRoles = function (el, roles) {
-        if (!el || !roles || !roles.length) return;
-        if (reduced) { el.textContent = roles[0]; return; }
-        let r = 0, i = roles[0].length, del = false;
-        const step = () => {
-            const word = roles[r];
-            if (!del) {
-                i++;
-                el.textContent = word.slice(0, i);
-                if (i >= word.length) { del = true; return setTimeout(step, 2200); }
-                return setTimeout(step, 55 + Math.random() * 50);
-            }
-            i--;
-            el.textContent = word.slice(0, i);
-            if (i <= 0) { del = false; r = (r + 1) % roles.length; return setTimeout(step, 300); }
-            setTimeout(step, 28);
+    /* ---------- motto: one phrase, a new skin + entrance every ~2.6s ---------- */
+    FX.motto = function (el, text) {
+        if (!el) return;
+        const RUNE = { a: 'ᚨ', b: 'ᛒ', c: 'ᚲ', d: 'ᛞ', e: 'ᛖ', f: 'ᚠ', g: 'ᚷ', h: 'ᚺ', i: 'ᛁ', j: 'ᛃ', k: 'ᚲ', l: 'ᛚ', m: 'ᛗ', n: 'ᚾ', o: 'ᛟ', p: 'ᛈ', q: 'ᚲ', r: 'ᚱ', s: 'ᛊ', t: 'ᛏ', u: 'ᚢ', v: 'ᚹ', w: 'ᚹ', x: 'ᛉ', y: 'ᛃ', z: 'ᛉ' };
+        /* curated pairs: skin (look) × entrance (motion) */
+        const COMBOS = [
+            ['term', 'decrypt'], ['ancient', 'runes'], ['redalert', 'glitch'], ['holo', 'rise'],
+            ['ink', 'sweep'], ['outline', 'flip'], ['term', 'type'], ['neon', 'blur'],
+            ['glitch', 'scatter'], ['ancient', 'wave'], ['redalert', 'binary'], ['ink', 'spotlight']
+        ];
+        el.setAttribute('aria-hidden', 'true');
+        const sr = document.createElement('span');
+        sr.className = 'sr-only';
+        sr.textContent = text;
+        el.parentNode.insertBefore(sr, el);
+
+        const chars = text.split('');
+        const build = () => {
+            el.innerHTML = chars.map((c, i) =>
+                '<span class="mc' + (c === ' ' ? ' sp' : '') + '" style="--i:' + i + ';--dx:' + ((Math.random() - 0.5) * 160).toFixed(0) + 'px;--dy:' + ((Math.random() - 0.5) * 70).toFixed(0) + 'px;--r:' + ((Math.random() - 0.5) * 140).toFixed(0) + 'deg">' + (c === ' ' ? '&nbsp;' : c) + '</span>'
+            ).join('');
+            return Array.prototype.slice.call(el.children);
         };
-        setTimeout(() => { del = true; step(); }, 3200);
+        let timers = [];
+        const later = (fn, ms) => { timers.push(setTimeout(fn, ms)); };
+        const clear = () => { timers.forEach(clearTimeout); timers = []; };
+
+        /* JS-driven entrances: they morph characters before settling */
+        const morph = (spans, pick, dur, stagger) => {
+            spans.forEach((s, i) => {
+                const real = chars[i];
+                if (real === ' ') return;
+                const t0 = i * stagger;
+                const ticks = Math.max(2, Math.round(dur / 55));
+                for (let k = 0; k < ticks; k++) later(() => { s.textContent = pick(real, k / ticks); s.classList.add('morph'); }, t0 + k * 55);
+                later(() => { s.textContent = real; s.classList.remove('morph'); s.classList.add('done'); }, t0 + ticks * 55);
+            });
+        };
+        const GLY = 'ᚠᚢᚦᚨᚱᚲᚷᚹᚺᚾᛁᛃᛇᛈᛉᛊᛏᛒᛖᛗᛚᛜᛞᛟアイウエオカキクケコ0123456789<>/{}#$%&*';
+        const JS = {
+            decrypt: (sp) => morph(sp, () => GLY[(Math.random() * GLY.length) | 0], 420, 22),
+            runes: (sp) => morph(sp, (c) => RUNE[c] || c, 520, 30),
+            binary: (sp) => morph(sp, () => (Math.random() < 0.5 ? '0' : '1'), 380, 20),
+            type: (sp) => {
+                sp.forEach((s) => s.classList.add('hide'));
+                sp.forEach((s, i) => later(() => s.classList.remove('hide'), 120 + i * 32));
+            }
+        };
+
+        let order = [], idx = 0, last = null;
+        const shuffled = () => {
+            /* Fisher–Yates, retried until no two neighbours share a skin (also across rounds) */
+            for (let attempt = 0; attempt < 60; attempt++) {
+                const a = COMBOS.slice();
+                for (let i = a.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    const t = a[i]; a[i] = a[j]; a[j] = t;
+                }
+                let ok = !last || a[0][0] !== last[0];
+                for (let i = 1; ok && i < a.length; i++) if (a[i][0] === a[i - 1][0]) ok = false;
+                if (ok) return a;
+            }
+            return COMBOS.slice();
+        };
+        const next = () => {
+            if (idx >= order.length) {
+                order = shuffled();
+                idx = 0;
+            }
+            return order[idx++];
+        };
+        const show = () => {
+            clear();
+            const combo = next();
+            last = combo;
+            if (reduced) {
+                el.className = 'motto skin-' + combo[0];
+                if (!el.firstChild) build();
+                return;
+            }
+            el.classList.add('out');
+            later(() => {
+                const spans = build();
+                el.className = 'motto skin-' + combo[0] + ' anim-' + combo[1];
+                void el.offsetWidth;
+                el.classList.add('go');
+                if (JS[combo[1]]) JS[combo[1]](spans);
+            }, 160);
+        };
+
+        let running = false, loopT = null, lastShow = 0;
+        const tick = () => { lastShow = performance.now(); show(); };
+        const start = () => {
+            if (running) return;
+            running = true;
+            /* observers can fire several times while the page settles: never restyle twice within a second */
+            if (performance.now() - lastShow > 1000) tick();
+            loopT = setInterval(tick, reduced ? 3200 : 2600);
+        };
+        const stop = () => {
+            running = false;
+            clearInterval(loopT);
+        };
+        el.className = 'motto skin-term';
+        build();
+        if ('IntersectionObserver' in window) {
+            new IntersectionObserver((en) => { en.forEach((e) => (e.isIntersecting ? start() : stop())); }).observe(el);
+        } else start();
+        document.addEventListener('visibilitychange', () => { if (document.hidden) stop(); else start(); });
     };
 
     /* ---------- ticker ---------- */
@@ -338,7 +428,8 @@
             g.font = fs + 'px JetBrains Mono, monospace';
             drops.forEach((y, i) => {
                 const ch = GLYPHS[(Math.random() * GLYPHS.length) | 0];
-                g.fillStyle = Math.random() < 0.06 ? '#e7b75f' : '#3dff8f';
+                const rr = Math.random();
+                g.fillStyle = rr < 0.04 ? '#ff3b55' : rr < 0.1 ? '#e7b75f' : '#3dff8f';
                 g.fillText(ch, i * fs, y * fs);
                 drops[i] = y * fs > cv.height && Math.random() > 0.975 ? 0 : y + 1;
             });

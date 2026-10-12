@@ -93,7 +93,7 @@
         safe('clock', FX.initClock);
         safe('cursor', FX.initCursor);
         safe('ticker', () => FX.initTicker($('ticker-move'), P.facts));
-        safe('roles', () => FX.typeRoles($('role-typer'), P.roles));
+        safe('motto', () => FX.motto($('motto'), P.motto || 'make the unconscious conscious'));
         safe('konami', FX.initKonami);
 
         safe('hero', () => window.initHero($('hero-canvas'), $('hero-readout')));

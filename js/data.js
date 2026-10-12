@@ -13,6 +13,7 @@ window.PROFILE = {
         'AI / ML Tinkerer',
         'Keeper of Ancient Protocols'
     ],
+    motto: 'make the unconscious conscious',
     summary: 'Computer Science graduate (2026) who builds full-stack web apps, cloud infrastructure and ML-driven tools. I like systems that are fast, secure and understandable — and I like knowing the history behind the tech I use.',
     status: 'Open to opportunities',
 
@@ -90,7 +91,7 @@ window.PROFILE = {
         { id: 'back',  name: 'Backend',         color: '#a78bfa' },
         { id: 'data',  name: 'Data',            color: '#ff7a59' },
         { id: 'ops',   name: 'Cloud & DevOps',  color: '#e7b75f' },
-        { id: 'ai',    name: 'AI & Security',   color: '#ff4d8d' }
+        { id: 'ai',    name: 'AI & Security',   color: '#ff3b55' }
     ],
     skills: [
         { id: 'python', name: 'Python', cat: 'lang', rune: 'ᚠ', title: 'The Serpent Tongue',
