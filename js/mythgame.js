@@ -4,7 +4,7 @@
 (function () {
     'use strict';
 
-    const CYAN = 0x4de1ff, GREEN = 0x3dff8f, GOLD = 0xe7b75f, RED = 0xff4d5e;
+    const CYAN = 0x4de1ff, GREEN = 0x3dff8f, GOLD = 0xe7b75f, RED = 0xff3b55;
     const SPAWN_Z = -30, ESCAPE_Z = 4.2, MAX_ON_SCREEN = 3, START_SHIELDS = 3;
 
     /* ---------- the claims ---------- */
