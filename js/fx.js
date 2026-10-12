@@ -212,15 +212,21 @@
 
         const map = {};
         links.querySelectorAll('a').forEach((a) => { map[a.getAttribute('href').slice(1)] = a; });
+        const navAs = Object.values(map);
+        const setActive = (a) => {
+            navAs.forEach((x) => x.classList.toggle('active', x === a));
+        };
+        /* at the very bottom the last section may never reach mid-screen, so it wins there */
+        const atBottom = () => {
+            const max = document.documentElement.scrollHeight - window.innerHeight;
+            return max > 0 && window.scrollY >= max - 4;
+        };
         if ('IntersectionObserver' in window) {
             const io = new IntersectionObserver((entries) => {
+                if (atBottom()) return setActive(navAs[navAs.length - 1]);
                 entries.forEach((e) => {
                     const a = map[e.target.id];
-                    if (!a) return;
-                    if (e.isIntersecting) {
-                        Object.values(map).forEach((x) => x.classList.remove('active'));
-                        a.classList.add('active');
-                    }
+                    if (a && e.isIntersecting) setActive(a);
                 });
             }, { rootMargin: '-45% 0px -50% 0px' });
             Object.keys(map).forEach((id) => { const s = document.getElementById(id); if (s) io.observe(s); });
@@ -230,6 +236,7 @@
         const onScroll = () => {
             const max = document.documentElement.scrollHeight - window.innerHeight;
             prog.style.transform = 'scaleX(' + (max > 0 ? window.scrollY / max : 0) + ')';
+            if (atBottom() && navAs.length) setActive(navAs[navAs.length - 1]);
         };
         window.addEventListener('scroll', onScroll, { passive: true });
         onScroll();

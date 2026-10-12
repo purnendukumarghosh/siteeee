@@ -51,7 +51,7 @@
                 const list = P.skills.filter((s) => s.cat === c.id).map((s) => '<span style="color:' + c.color + '">' + esc(s.name) + '</span>').join('<span class="t-dim">, </span>');
                 print('<span class="t-gold">' + c.name.padEnd(15, ' ') + '</span> ' + list);
             });
-            print('<span class="t-dim">→ explore them in 3D: </span>' + cmdLink('goto skills') + '<span class="t-dim">  ·  lore: </span>' + cmdLink('skill python'));
+            print('<span class="t-dim">→ lore for any of them: </span>' + cmdLink('skill python'));
         };
         const projects = () => {
             P.projects.forEach((p, i) => {
@@ -121,7 +121,6 @@
                     if (!q || !s) return print('<span class="t-red">usage: skill &lt;name&gt;</span> <span class="t-dim">— try ' + cmdLink('skill python') + '</span>');
                     print('<span class="t-runes">' + s.rune + '</span>  <span class="t-b">' + esc(s.name) + '</span> <span class="t-gold">“' + esc(s.title) + '”</span>');
                     print(esc(s.lore), 't-muted');
-                    if (opts.selectSkill) opts.selectSkill(s.id);
                 }
             },
             projects: { d: 'things I have built', f: projects },
@@ -152,10 +151,10 @@
                 }
             },
             goto: {
-                d: 'jump to a section: shell, skills, codex, myths, contact', f: (args) => {
-                    const map = { home: 'top', top: 'top', shell: 'shell', skills: 'skills', codex: 'codex', resume: 'codex', myths: 'myths', myth: 'myths', contact: 'contact' };
+                d: 'jump to a section: shell, codex, myths, contact', f: (args) => {
+                    const map = { home: 'top', top: 'top', shell: 'shell', codex: 'codex', resume: 'codex', myths: 'myths', myth: 'myths', contact: 'contact' };
                     const id = map[(args[0] || '').toLowerCase()];
-                    if (!id) return print('<span class="t-red">goto: unknown section</span> <span class="t-dim">— try ' + ['skills', 'codex', 'myths', 'contact'].map((s) => cmdLink('goto ' + s)).join(' ') + '</span>');
+                    if (!id) return print('<span class="t-red">goto: unknown section</span> <span class="t-dim">— try ' + ['shell', 'codex', 'myths', 'contact'].map((s) => cmdLink('goto ' + s)).join(' ') + '</span>');
                     print('<span class="t-dim">navigating to #' + id + ' …</span>');
                     const el = document.getElementById(id);
                     if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 250);
